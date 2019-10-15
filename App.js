@@ -6,75 +6,78 @@ import { AuthSession } from 'expo';
 import axios from 'axios';
 
 export default class App extends React.Component {
-    state = {
-        CameraPermission: null
-    };
+  state = {
+    CameraPermission: null
+  };
 
-    async componentDidMount() {
-        const {status} = await Permissions.askAsync(Permissions.CAMERA)
-        this.setState({ CameraPermission: status === 'granted' })
-    }
+  async componentDidMount() {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA);
+    this.setState({ CameraPermission: status === 'granted' });
+  }
 
-    picture = (event) => {
-        axios.get("http://localhost:5000/")
-        .then(res => {
-            alert(res.data.timezone);
-        })
-        .catch(error => console.log(error));
-    }
+  picture = event => {
+    axios
+      .get('https://evening-waters-86048.herokuapp.com')
+      .then(res => {
+        alert(res.data);
+      })
+      .catch(error => console.log(error));
+  };
 
-    render() {
-        const {CameraPermission} = this.state;
-        if (CameraPermission === null) {
-            return <View/>
-        } else if (CameraPermission === false) {
-            alert('Access to camera is required for this app. Please go to settings and enable access.');
-            return (<View/>)
-        } else {
-            return (
-                <View style={styles.container}>
-                    <Camera>
-                        <View style={styles.view}>
-                            <TouchableOpacity style={styles.button} onPress={this.picture}>
-                                <Text style={styles.text}>IDENTIFY</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </Camera>
-                </View>
-            );
-        }
+  render() {
+    const { CameraPermission } = this.state;
+    if (CameraPermission === null) {
+      return <View />;
+    } else if (CameraPermission === false) {
+      alert(
+        'Access to camera is required for this app. Please go to settings and enable access.'
+      );
+      return <View />;
+    } else {
+      return (
+        <View style={styles.container}>
+          <Camera>
+            <View style={styles.view}>
+              <TouchableOpacity style={styles.button} onPress={this.picture}>
+                <Text style={styles.text}>IDENTIFY</Text>
+              </TouchableOpacity>
+            </View>
+          </Camera>
+        </View>
+      );
     }
+  }
 }
 
 const styles = {
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    view: {
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        width: Dimensions.get('window').width,
-    },
-    button: {
-        fontFamily: 'Arial',
-        height: 80,
-        width: 80,
-        justifyContent: 'center',
-        borderWidth: 5,
-        borderRadius: 200,
-        borderRightColor: 'cyan',
-        borderLeftColor: 'darkblue',
-        borderTopColor: 'orange',
-        borderBottomColor: 'darkgreen',
-        alignSelf: 'flex-end',
-        marginBottom: 28,
-    },
-    text: {
-        fontSize: 12,
-        color: 'white',
-        alignSelf: 'center',
-    }
-}
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  view: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    width: Dimensions.get('window').width
+  },
+  button: {
+    fontFamily: 'Arial',
+    height: 80,
+    width: 80,
+    justifyContent: 'center',
+    borderWidth: 5,
+    borderRadius: 200,
+    borderRightColor: 'cyan',
+    borderLeftColor: 'darkblue',
+    borderTopColor: 'orange',
+    borderBottomColor: 'darkgreen',
+    alignSelf: 'flex-end',
+    marginBottom: 28
+  },
+  text: {
+    fontSize: 12,
+    color: 'white',
+    alignSelf: 'center'
+  }
+};
