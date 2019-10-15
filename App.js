@@ -11,17 +11,16 @@ export default class App extends React.Component {
     };
 
     async componentDidMount() {
-        axios.get("http://localhost:5000/")
-          .then(res => {
-              alert("API");
-          })
-          .catch(error => console.log(error));
         const {status} = await Permissions.askAsync(Permissions.CAMERA)
         this.setState({ CameraPermission: status === 'granted' })
     }
 
     picture = (event) => {
-        alert('Connecting to flask server');
+        axios.get("http://localhost:5000/")
+        .then(res => {
+            alert(res.data.timezone);
+        })
+        .catch(error => console.log(error));
     }
 
     render() {
