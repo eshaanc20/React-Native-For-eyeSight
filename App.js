@@ -3,6 +3,7 @@ import { Text, View, TouchableOpacity, Dimensions } from 'react-native';
 import * as Permissions from 'expo-permissions';
 import { Camera } from 'expo-camera';
 import { AuthSession } from 'expo';
+import axios from 'axios';
 
 export default class App extends React.Component {
     state = {
@@ -10,6 +11,11 @@ export default class App extends React.Component {
     };
 
     async componentDidMount() {
+        axios.get("http://localhost:5000/")
+          .then(res => {
+              alert("API");
+          })
+          .catch(error => console.log(error));
         const {status} = await Permissions.askAsync(Permissions.CAMERA)
         this.setState({ CameraPermission: status === 'granted' })
     }
