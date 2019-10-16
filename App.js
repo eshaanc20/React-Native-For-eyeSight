@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, TouchableOpacity, Dimensions } from 'react-native';
+import { Text, View, TouchableOpacity, Dimensions, Image} from 'react-native';
 import * as Permissions from 'expo-permissions';
 import { Camera } from 'expo-camera';
 import { AuthSession } from 'expo';
@@ -7,7 +7,8 @@ import axios from 'axios';
 
 export default class App extends React.Component {
   state = {
-    CameraPermission: null
+    CameraPermission: null,
+    uri: null
   };
 
   async componentDidMount() {
@@ -15,7 +16,9 @@ export default class App extends React.Component {
     this.setState({ CameraPermission: status === 'granted' });
   }
 
-  picture = event => {
+  picture = async () => {
+    const picture = await this.camera.takePictureAsync();
+    this.setState({uri: picture.uri});
     axios
       .get('https://evening-waters-86048.herokuapp.com')
       .then(res => {
@@ -25,6 +28,7 @@ export default class App extends React.Component {
   };
 
   render() {
+    var uri = this.state.uri;
     const { CameraPermission } = this.state;
     if (CameraPermission === null) {
       return <View />;
@@ -36,13 +40,18 @@ export default class App extends React.Component {
     } else {
       return (
         <View style={styles.container}>
-          <Camera>
-            <View style={styles.view}>
-              <TouchableOpacity style={styles.button} onPress={this.picture}>
-                <Text style={styles.text}>IDENTIFY</Text>
-              </TouchableOpacity>
-            </View>
-          </Camera>
+            {this.state.uri != null? 
+              <View style = {{width: 200, height: 200}} key={uri}>
+                <Image style={{width: 200, height: 200}} source={{uri}}/>
+              </View>: 
+              <Camera ref={ (ref) => {this.camera = ref} }>
+              <View style={styles.view}>
+                <TouchableOpacity style={styles.button} onPress={this.picture.bind(this)}>
+                  <Text style={styles.text}>IDENTIFY</Text>
+                </TouchableOpacity>
+              </View>
+              </Camera>
+            }
         </View>
       );
     }
