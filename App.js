@@ -19,8 +19,7 @@ export default class App extends React.Component {
   picture = async () => {
     const picture = await this.camera.takePictureAsync();
     this.setState({uri: picture.uri});
-    axios
-      .get('https://evening-waters-86048.herokuapp.com')
+    axios.get('https://evening-waters-86048.herokuapp.com')
       .then(res => {
         alert(res.data);
       })
