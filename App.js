@@ -40,8 +40,8 @@ export default class App extends React.Component {
       return (
         <View style={styles.container}>
             {this.state.uri != null? 
-              <View style = {{width: 200, height: 200}} key={uri}>
-                <Image style={{width: 200, height: 200}} source={{uri}}/>
+              <View style = {{width: 250, height: 400}} key={uri}>
+                <Image style={{width: 250, height: 400}} source={{uri}}/>
               </View>: 
               <Camera ref={ (ref) => {this.camera = ref} }>
               <View style={styles.view}>
