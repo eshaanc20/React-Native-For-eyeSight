@@ -1,10 +1,11 @@
 import React from 'react';
-import { Text, View, TouchableOpacity, Dimensions, Image, Modal} from 'react-native';
+import { Text, View, TouchableOpacity, Dimensions, Image, Modal, ActivityIndicator } from 'react-native';
 import * as Permissions from 'expo-permissions';
 import { Camera } from 'expo-camera';
 import { AuthSession } from 'expo';
 import axios from 'axios';
 import { Platform } from '@unimodules/core';
+import Dialog from 'react-native-popup-dialog';
 
 export default class App extends React.Component {
   state = {
@@ -13,6 +14,7 @@ export default class App extends React.Component {
     data: null,
     uri: null,
     open: false,
+    request: false,
   };
 
   async componentDidMount() {
@@ -24,21 +26,31 @@ export default class App extends React.Component {
     const picture = await this.camera.takePictureAsync(
       (params = { base64: true })
     );
-    axios.post("https://eyesight-backend.herokuapp.com/", {"base_64": picture.base64})
-      .then(res => {
-        this.setState({
-          answer: res.data.answer, 
-          data: res.data.data, 
-          uri: picture.uri
-        })
-      })
-      .catch(err => {
-        console.log(err)
-      })
+    base64 = picture.base64
+    console.log("picture")
+    this.setState({uri: picture.uri, request: true})
   };
 
+  flask = async () => {
+    axios.post("https://eyesight-backend.herokuapp.com/", {"base_64": base64})
+    .then(res => {
+      this.setState({
+        answer: res.data.answer, 
+        data: res.data.data, 
+        request: false
+      })
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  }
+
   render() {
+    var base64 = null
     let uri = this.state.uri
+    if (this.state.request) {
+      this.flask()
+    }
     const { CameraPermission } = this.state;
     if (CameraPermission === null) {
       return <View />;
@@ -50,12 +62,18 @@ export default class App extends React.Component {
     } else {
       return (
         <View style={styles.container}>
-          {this.state.answer != null ? (
+          {this.state.uri != null ? (
             <View style={styles.view} key={uri}>
-              <Image style={{ width: 250, height: 400 }} source={{ uri }} />
-              <Modal animationType="slide" visible={true}>
-                <Text>{this.state.answer}</Text>
-              </Modal>
+              <Image style={{ flex: 1}} source={{ uri }} />
+              <Dialog visible={true}>
+                <View style={{padding: 40}}>
+                  {this.state.request? (
+                    <ActivityIndicator size="large" color="#0000ff" />
+                  ) : (
+                    <Text>{this.state.answer}</Text>
+                  )}
+                </View>
+              </Dialog>
             </View>
           ) : (
             <Camera
