@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, TouchableOpacity, Dimensions, Image } from 'react-native';
+import { Text, View, TouchableOpacity, Dimensions, Image, Modal} from 'react-native';
 import * as Permissions from 'expo-permissions';
 import { Camera } from 'expo-camera';
 import { AuthSession } from 'expo';
@@ -9,8 +9,10 @@ import { Platform } from '@unimodules/core';
 export default class App extends React.Component {
   state = {
     CameraPermission: null,
+    answer: null,
+    data: null,
     uri: null,
-    base64: null
+    open: false,
   };
 
   async componentDidMount() {
@@ -22,18 +24,21 @@ export default class App extends React.Component {
     const picture = await this.camera.takePictureAsync(
       (params = { base64: true })
     );
-    this.setState({ base64: picture.base64 });
-    this.setState({ uri: picture.uri });
-    axios
-      .get('https://evening-waters-86048.herokuapp.com')
+    axios.post("https://eyesight-backend.herokuapp.com/", {"base_64": picture.base64})
       .then(res => {
-        alert(res.data);
+        this.setState({
+          answer: res.data.answer, 
+          data: res.data.data, 
+          uri: picture.uri
+        })
       })
-      .catch(error => console.log(error));
+      .catch(err => {
+        console.log(err)
+      })
   };
 
   render() {
-    var uri = this.state.uri;
+    let uri = this.state.uri
     const { CameraPermission } = this.state;
     if (CameraPermission === null) {
       return <View />;
@@ -45,9 +50,12 @@ export default class App extends React.Component {
     } else {
       return (
         <View style={styles.container}>
-          {this.state.uri != null ? (
-            <View style={{ width: 250, height: 400 }} key={uri}>
+          {this.state.answer != null ? (
+            <View style={styles.view} key={uri}>
               <Image style={{ width: 250, height: 400 }} source={{ uri }} />
+              <Modal animationType="slide" visible={true}>
+                <Text>{this.state.answer}</Text>
+              </Modal>
             </View>
           ) : (
             <Camera
