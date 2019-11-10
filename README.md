@@ -1,6 +1,6 @@
 # eyeSight
 
-Mobile app that identifies colors in an image and determines the most dominant color in the image. This app was created to help people that have difficulties identifying colors.
+Mobile app that identifies colors in an image and determines the most dominant colors in the image. This app was created to help people that have difficulties identifying colors.
 
 ## Developers
 Eshaan Chaudhari<br>
@@ -12,7 +12,7 @@ detects colors in an image. We used libraries such as openCV and NumPy. The flas
 at [https://github.com/eshaanc20/eyeSight-backend](https://github.com/eshaanc20/eyeSight-backend). The flask back-end
 was deployed to heroku. The front-end will send the image taken by the user to the back-end by using an axios post request. 
 The back-end algorithm will process the image and returns the data for the colors in the image which is
-displayed using a pie chart. It also tells the user the most dominant color in the image.
+displayed using a pie chart. It also tells the user the most dominant colors in the image.
 
 ## Running the project on local computer
 Download this repository and download the Expo app on mobile device. Download all dependencies using:
