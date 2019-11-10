@@ -12,7 +12,7 @@ import Chart from './Components/Chart';
 export default class App extends React.Component {
   state = {
     CameraPermission: null,
-    answer: ['green'],
+    answer: [''],
     uri: '',
     open: false,
     reset: false,
@@ -146,7 +146,7 @@ export default class App extends React.Component {
                     <View style={{padding: 28}}>
                       <Text style={{textAlign: 'center', fontSize: 40, fontFamily: 'Avenir-Medium', fontWeight: '800', marginBottom: 20}}>eyeSight</Text>
                       <Text style={{textAlign: 'center', fontSize: 18, fontFamily: 'Arial'}}>
-                        App helps identify the most dominant color in an image and provides 
+                        App helps identify the most dominant colors in an image and provides 
                         information about other colors in the image.
                       </Text>
                     </View>
@@ -189,6 +189,7 @@ export default class App extends React.Component {
                             open: false,
                             reset: true
                           })}
+                          style={{width: 100}}
                           >
                           <Text style={{textAlign: 'center', fontSize: 16, padding: 8, color: 'white'}}>Close</Text>
                         </TouchableOpacity>
