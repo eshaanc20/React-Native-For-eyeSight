@@ -8,7 +8,6 @@ import { Platform } from '@unimodules/core';
 import Dialog, { DialogFooter, DialogButton, DialogTitle} from 'react-native-popup-dialog';
 import PieChart from 'react-native-pie'
 import Chart from './Components/Chart';
-import LinearGradient from 'react-native-linear-gradient';
 
 export default class App extends React.Component {
   state = {
@@ -45,7 +44,7 @@ export default class App extends React.Component {
         var colors = []
         var pixels = []
         data.map(data => {
-          if (data[1] < 800) {
+          if (data[1] < 1000) {
             pixels.push(0);
           } else {
             pixels.push(data[1])
@@ -104,7 +103,6 @@ export default class App extends React.Component {
               break;
           }
         })
-        console.log(res.data.answer)
         this.setState({
           answer: res.data.answer, 
           colors: colorsHEX, 
@@ -144,16 +142,15 @@ export default class App extends React.Component {
           {this.state.uri != null ? (
             <View style={styles.view} key={uri}>
               {this.state.open == false ?
-                <LinearGradient colors={['#4c669f']}>
-                  <View style={{alignSelf: 'flex-end', justifyContent: 'center'}}> 
-                    <View style={{marginBottom: 250}}>
-                      <Text style={{textAlign: 'center', fontSize: 40, fontFamily: 'Arial', fontWeight: '800', marginBottom: 20}}>eyeSight</Text>
+                  <View style={{justifyContent: 'center', backgroundColor: 'lightgray', width: '100%'}}> 
+                    <View style={{padding: 28}}>
+                      <Text style={{textAlign: 'center', fontSize: 40, fontFamily: 'Avenir-Medium', fontWeight: '800', marginBottom: 20}}>eyeSight</Text>
                       <Text style={{textAlign: 'center', fontSize: 18, fontFamily: 'Arial'}}>
                         App helps identify the most dominant color in an image and provides 
                         information about other colors in the image.
                       </Text>
                     </View>
-                    <View style={{alignItems: 'center'}}>
+                    <View style={{alignItems: 'center', marginTop: 20}}>
                       <TouchableOpacity 
                         style={styles.button2}
                         onPress={() => {
@@ -171,7 +168,6 @@ export default class App extends React.Component {
                       </TouchableOpacity> 
                     </View>
                   </View>
-                </LinearGradient>
                 : 
                 <Image style={{ flex: 1}} source={{ uri }} />}
               <Dialog 
@@ -243,10 +239,10 @@ const styles = {
     justifyContent: 'center',
     borderWidth: 5,
     borderRadius: 200,
-    borderRightColor: 'cyan',
-    borderLeftColor: 'darkblue',
-    borderTopColor: 'orange',
-    borderBottomColor: 'darkgreen',
+    borderRightColor: '#f56214',
+    borderLeftColor: '#2073f7',
+    borderTopColor: '#02c927',
+    borderBottomColor: '#d93d1e',
     alignSelf: 'flex-end',
     marginBottom: 28
   },
@@ -256,10 +252,10 @@ const styles = {
     width: 110,
     borderWidth: 5,
     borderRadius: 20,
-    borderRightColor: 'cyan',
-    borderLeftColor: 'darkblue',
-    borderTopColor: 'orange',
-    borderBottomColor: 'darkgreen',
+    borderRightColor: '#f56214',
+    borderLeftColor: '#2073f7',
+    borderTopColor: '#02c927',
+    borderBottomColor: '#d93d1e',
     marginBottom: 28,
     justifyContent: 'center',
     borderRadius: 10,
