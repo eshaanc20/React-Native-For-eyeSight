@@ -7,12 +7,14 @@ import axios from 'axios';
 import { Platform } from '@unimodules/core';
 import Dialog, { DialogFooter, DialogButton, DialogTitle} from 'react-native-popup-dialog';
 import PieChart from 'react-native-pie'
+import Chart from './Components/Chart';
+import LinearGradient from 'react-native-linear-gradient';
 
 export default class App extends React.Component {
   state = {
     CameraPermission: null,
-    answer: null,
-    uri: null,
+    answer: ['green'],
+    uri: '',
     open: false,
     reset: false,
     request: false,
@@ -43,8 +45,12 @@ export default class App extends React.Component {
         var colors = []
         var pixels = []
         data.map(data => {
-          pixels.push(data[1])
-          sum += data[1]
+          if (data[1] < 800) {
+            pixels.push(0);
+          } else {
+            pixels.push(data[1])
+            sum += data[1]
+          }
           colors.push(data[0])
         })
         let pieChart = []
@@ -54,55 +60,51 @@ export default class App extends React.Component {
         var colorsHEX = []
         colors.map(color => {
           switch (color) {
-            case "Light blue":
-              colorsHEX.push("#6BCCF9")
-              break;
             case "Orange":
-              colorsHEX.push("#DC7633")
-              break;
-            case "Dark Orange":
-              colorsHEX.push("#CB4335")
-              break;
-            case "Dark Red":
-              colorsHEX.push("#C9290F")
+              colorsHEX.push("#d66e06")
               break;
             case "Red":
-              colorsHEX.push("#E8280A")
+              colorsHEX.push("#d60202")
               break;
             case "Gold":
-              colorsHEX.push("#DCB000")
+              colorsHEX.push("#e0b107")
               break;
             case "Yellow":
-              colorsHEX.push("#F3EC00")
-              break;
-            case "Light Green":
-              colorsHEX.push("#8AE409")
+              colorsHEX.push("#f2e70c")
               break;
             case "Green":
-              colorsHEX.push("#00C129")
+              colorsHEX.push("#4bbd11")
               break;
             case "Teal":
-              colorsHEX.push("#26B277")
+              colorsHEX.push("#11bd95")
               break;
-            case "Dark Green":
-              colorsHEX.push("#007B1A")
+            case "Blue":
+              colorsHEX.push("#317eeb")
               break;
-            case "Dark Blue":
-              colorsHEX.push("#0050B7")
+            case "Purple":
+              colorsHEX.push("#5542d4")
               break;
-            case "Black":
-              colorsHEX.push("black")
+            case "Pink":
+              colorsHEX.push("#d334d9")
+              break;
+            case "Brown":
+              colorsHEX.push("#806161")
+              break;
+            case "Gray":
+              colorsHEX.push("#828282")
               break;
             case "White":
-              colorsHEX.push("white")
+              colorsHEX.push("#f5f5f5")
+              break;
+            case "Black":
+              colorsHEX.push("#212020")
+              break;
+            case "Cyan":
+              colorsHEX.push("#0cc5cf")
               break;
           }
         })
-        let count = 100
-        pieChart.map((data, index) => {
-          pieChart[index] = (100 - data)/100 * count
-          count = count - ((100 - data)/100 * count)
-        })
+        console.log(res.data.answer)
         this.setState({
           answer: res.data.answer, 
           colors: colorsHEX, 
@@ -118,6 +120,13 @@ export default class App extends React.Component {
   render() {
     var base64 = null
     let uri = this.state.uri
+    var backgroundColors = [
+      'rgb(106, 57, 171)',
+      'rgb(151, 52, 160)',
+      'rgb(197, 57, 92)',
+      'rgb(231, 166, 73)',
+      'rgb(181, 70, 92)'
+    ]
     if (this.state.request) {
       this.flask()
     }
@@ -135,54 +144,59 @@ export default class App extends React.Component {
           {this.state.uri != null ? (
             <View style={styles.view} key={uri}>
               {this.state.open == false ?
-                <View style={{alignSelf: 'flex-end', justifyContent: 'center'}}> 
-                  <View style={{marginBottom: 250}}>
-                    <Text style={{textAlign: 'center', fontSize: 40, fontFamily: 'Arial', fontWeight: '800', marginBottom: 20}}>eyeSight</Text>
-                    <Text style={{textAlign: 'center', fontSize: 18, fontFamily: 'Arial'}}>
-                      App helps identify the most dominant color in an image and provides 
-                      information about other colors in the image.
-                    </Text>
+                <LinearGradient colors={['#4c669f']}>
+                  <View style={{alignSelf: 'flex-end', justifyContent: 'center'}}> 
+                    <View style={{marginBottom: 250}}>
+                      <Text style={{textAlign: 'center', fontSize: 40, fontFamily: 'Arial', fontWeight: '800', marginBottom: 20}}>eyeSight</Text>
+                      <Text style={{textAlign: 'center', fontSize: 18, fontFamily: 'Arial'}}>
+                        App helps identify the most dominant color in an image and provides 
+                        information about other colors in the image.
+                      </Text>
+                    </View>
+                    <View style={{alignItems: 'center'}}>
+                      <TouchableOpacity 
+                        style={styles.button2}
+                        onPress={() => {
+                          this.setState({
+                            answer: null,
+                            uri: null,
+                            open: false,
+                            reset: false,
+                            request: false,
+                            colors: null
+                          })
+                        }}
+                      >
+                        <Text style={{fontSize: 20, alignSelf: 'center'}}>Start</Text>
+                      </TouchableOpacity> 
+                    </View>
                   </View>
-                  <TouchableOpacity 
-                    style={styles.button2}
-                    onPress={() => {
-                      this.setState({
-                        answer: null,
-                        uri: null,
-                        open: false,
-                        reset: false,
-                        request: false,
-                        colors: null
-                      })
-                    }}
-                  >
-                    <Text style={{fontSize: 20, alignSelf: 'center'}}>Start</Text>
-                  </TouchableOpacity> 
-                </View>
+                </LinearGradient>
                 : 
                 <Image style={{ flex: 1}} source={{ uri }} />}
               <Dialog 
                 visible={this.state.open}
-                dialogTitle={<DialogTitle title="Color Analysis"/>}>
+                dialogTitle={<DialogTitle title="Color Analysis"/>}
+              >
                 <View style={{padding: 40}}>
                   {this.state.request? (
                     <ActivityIndicator size="large" color="#0000ff" />
                   ) : (
                     <View>
-                      <PieChart
-                        radius={90}
-                        series={this.state.pieChart}
-                        colors={this.state.colors}
-                      />
-                      <Text style={{fontSize: 28, textAlign: 'center', marginTop: 20}}>{this.state.answer}</Text>
-                      <TouchableOpacity 
-                        onPress={() => this.setState({
-                          open: false,
-                          reset: true
-                        })}
-                        >
-                        <Text>Close</Text>
-                      </TouchableOpacity>
+                      <Chart pieChart={this.state.pieChart} colors={this.state.colors}/>
+                      {this.state.answer.map((answer,index) => {
+                        return(<Text key={index} style={{fontSize: 24, textAlign: 'center', marginTop: 15}}>{answer}</Text>)
+                      })}
+                      <View style={{alignItems: 'center', marginTop: 20, borderRadius: 10, backgroundColor: '#189bf2'}}>
+                        <TouchableOpacity 
+                          onPress={() => this.setState({
+                            open: false,
+                            reset: true
+                          })}
+                          >
+                          <Text style={{textAlign: 'center', fontSize: 16, padding: 8, color: 'white'}}>Close</Text>
+                        </TouchableOpacity>
+                      </View>
                     </View>
                   )}
                 </View>
@@ -246,9 +260,9 @@ const styles = {
     borderLeftColor: 'darkblue',
     borderTopColor: 'orange',
     borderBottomColor: 'darkgreen',
-    margin: 'auto',
     marginBottom: 28,
     justifyContent: 'center',
+    borderRadius: 10,
   },
   text: {
     fontSize: 12,
